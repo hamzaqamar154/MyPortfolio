@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
 import { ArrowDown, Github, Linkedin, Twitter, Mail, Download } from "lucide-react";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 
@@ -29,11 +29,22 @@ export default function Hero() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  // Disable opacity fade on mobile to prevent disappearing on swipe
-  // On desktop, fade only at the very end of scroll
-  const opacity = isMobile 
-    ? useTransform(scrollYProgress, [0, 1], [1, 1])
-    : useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0.3]);
+  // Always call useTransform (required by React Hooks rules)
+  // Desktop: fade at the very end, Mobile: no fade
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0.3]);
+  const opacity = useMotionValue(1);
+
+  // Update opacity based on mobile state and scroll
+  useEffect(() => {
+    if (isMobile) {
+      opacity.set(1);
+    } else {
+      const unsubscribe = opacityTransform.on("change", (latest) => {
+        opacity.set(latest);
+      });
+      return unsubscribe;
+    }
+  }, [isMobile, opacityTransform, opacity]);
 
   const handleDownloadCV = () => {
     const link = document.createElement("a");
