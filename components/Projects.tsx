@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -22,7 +23,7 @@ const projects = [
   {
     name: "Zeno AI - UX/UI Design Assistant",
     description: "UX/UI Design Assistant project. It's a tool I built that helps analyze design screenshots and gives you feedback on layout, colors, spacing, and overall design quality. Pretty useful when you want a second opinion on your designs or need quick insights.",
-    image: "/UIASSISTANT.PNG",
+    image: "/UIASSISTANT.png",
     technologies: ["OpenCV", "scikit-learn", "ReportLab", "python", "Streamlit"],
     github: "https://github.com/hamzaqamar154/Zeno-AI.git",
     live: "https://zeno-ai-ui-assistant.streamlit.app/",
@@ -114,10 +115,12 @@ export default function Projects() {
               <SwiperSlide key={index}>
                 <div className="project-card glass rounded-xl overflow-hidden h-full flex flex-col transition-all duration-300 hover:glow-orange">
                   <div className="relative h-48 overflow-hidden">
-                    <img
+                    <Image
                       src={project.image}
                       alt={project.name}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      fill
+                      className="object-cover transition-transform duration-300 hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
                   <div className="p-6 flex-1 flex flex-col">

@@ -81,6 +81,15 @@
   backdrop-filter: blur(10px);
   border-radius: 50%;
   border: 1px solid rgba(255, 106, 0, 0.2);
+  display: none; /* Hide by default on mobile/tablet */
+}
+
+/* Show navigation buttons only on desktop (1024px and above) */
+@media (min-width: 1024px) {
+  .projects-swiper .swiper-button-next,
+  .projects-swiper .swiper-button-prev {
+    display: flex;
+  }
 }
 
 .projects-swiper .swiper-button-next:after,
