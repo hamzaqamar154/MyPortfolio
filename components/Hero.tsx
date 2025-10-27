@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Github, Linkedin, Twitter, Mail, Download } from "lucide-react";
 import AnchorLink from "react-anchor-link-smooth-scroll";
@@ -12,13 +12,28 @@ const socialLinks = [
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Disable opacity fade on mobile to prevent disappearing on swipe
+  // On desktop, fade only at the very end of scroll
+  const opacity = isMobile 
+    ? useTransform(scrollYProgress, [0, 1], [1, 1])
+    : useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0.3]);
 
   const handleDownloadCV = () => {
     const link = document.createElement("a");
